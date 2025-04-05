@@ -7,6 +7,8 @@ import io.swagger.v3.oas.annotations.info.Info;
 import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cache.annotation.EnableCaching;
+
 @OpenAPIDefinition(info = @Info(title = "My API",
         version = "v1",
         description = "This is description"))
@@ -17,6 +19,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
         in = SecuritySchemeIn.HEADER
 )
 @SpringBootApplication
+@EnableCaching
 public class GamifiedHabitTrackerApiApplication {
 
     public static void main(String[] args) {
