@@ -47,4 +47,11 @@ public interface AppUserRepository {
         RETURNING *;
     """)
     AppUser register(@Param("req") AppUserRequest request);
+
+    @ResultMap("appUserMapper")
+    @Select("""
+        SELECT * FROM app_users WHERE app_user_id = #{appUserId};
+        RETURNING *;
+    """)
+    AppUser getUserById(UUID id);
 }

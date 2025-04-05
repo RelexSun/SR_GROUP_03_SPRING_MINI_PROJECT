@@ -12,4 +12,16 @@ CREATE TABLE app_users
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-drop table app_users
+CREATE TABLE habits (
+    habit_id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
+    title VARCHAR(255) NOT NULL,
+    description VARCHAR,
+    frequency VARCHAR(255) NOT NULL,
+    is_active BOOLEAN NOT NULL,
+    app_user_id uuid NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT fk_app_user FOREIGN KEY (app_user_id) REFERENCES app_users (app_user_id)
+                    ON DELETE CASCADE
+                    ON UPDATE CASCADE
+);
+
