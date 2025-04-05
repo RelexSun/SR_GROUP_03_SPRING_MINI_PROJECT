@@ -15,9 +15,4 @@ public class AppConfig {
     public PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();
     }
-
-    @Bean
-    public AppUser getCurrentUser() {
-        return (AppUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-    }
 }

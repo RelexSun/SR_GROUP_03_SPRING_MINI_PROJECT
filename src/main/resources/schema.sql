@@ -12,6 +12,21 @@ CREATE TABLE app_users
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+CREATE TABLE achievements(
+                             achievement_id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
+                             title VARCHAR(100) NOT NULL,
+                             description VARCHAR(100) NOT NULL,
+                             badge VARCHAR(100) NOT NULL,
+                             xp_required INT not null
+);
+
+CREATE TABLE app_user_achievement(
+                                     app_user_achievement_id serial primary key,
+                                     app_user_id uuid not null ,
+                                     achievement_id uuid not null ,
+                                     CONSTRAINT fk_app_user FOREIGN KEY (app_user_id) REFERENCES app_users (app_user_id) ON DELETE CASCADE ON UPDATE CASCADE,
+                                     CONSTRAINT fk_achievements FOREIGN KEY (achievement_id) REFERENCES achievements (achievement_id) ON DELETE CASCADE ON UPDATE CASCADE
+);
 CREATE TABLE habits (
     habit_id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
     title VARCHAR(255) NOT NULL,
