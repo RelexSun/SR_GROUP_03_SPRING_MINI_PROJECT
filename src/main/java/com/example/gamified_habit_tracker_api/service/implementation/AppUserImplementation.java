@@ -10,7 +10,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +22,7 @@ public class AppUserImplementation implements AppUserService {
     private final AppUserRepository appUserRepository;
     private final AppUserMapper appUserMapper;
     private final PasswordEncoder passwordEncoder;
+    private final EmailSenderServiceImplementation emailSenderServiceImplementation;
 
     @Override
     public UserDetails loadUserByUsername(String identifier) throws UsernameNotFoundException {
@@ -30,14 +30,5 @@ public class AppUserImplementation implements AppUserService {
         return appUserRepository.getUserByUsername(identifier);
     }
 
-    @Override
-    public AppUserResponse register(AppUserRequest request) {
-        request.setPassword(passwordEncoder.encode(request.getPassword()));
-        AppUser user = appUserRepository.register(request);
-        Random rnd = new Random();
-        int otp = rnd.nextInt(999999);
-
-        return appUserMapper.toResponse(user);
-    }
 }
 
