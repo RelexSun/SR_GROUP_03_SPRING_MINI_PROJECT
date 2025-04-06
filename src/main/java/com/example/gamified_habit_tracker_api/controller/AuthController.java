@@ -29,17 +29,8 @@ import org.springframework.web.bind.annotation.*;
 public class AuthController extends BaseController {
     private final AuthServiceImplementation authServiceImplementation;
 
-//    private void authenticate(String email, String password) throws Exception {
-//        try {
-//            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(email, password));
-//        } catch (DisabledException e) {
-//            throw new Exception("USER_DISABLED", e);
-//        } catch (BadCredentialsException e) {
-//            throw new Exception("INVALID_CREDENTIALS", e);
-//        }
-//    }
-
     @PostMapping("/login")
+    @Operation(summary = "User login")
     public ResponseEntity<APIResponse> login(@Valid @RequestBody AuthRequest request) throws Exception {
         return response(APIResponse.builder()
                 .success(true)
@@ -62,6 +53,7 @@ public class AuthController extends BaseController {
 
 
     @PostMapping("/verify")
+    @Operation(summary = "Verify email with OTP")
     public ResponseEntity<APIResponse> verify(@Email @RequestParam String email, @RequestParam @Positive(message = "Otp code cannot be negative or zero") String otpCode) {
         authServiceImplementation.verify(email, otpCode);
         return response(APIResponse.builder()
@@ -73,6 +65,7 @@ public class AuthController extends BaseController {
 
 
     @PostMapping("/resend")
+    @Operation(summary = "Resent verification OTP")
     public ResponseEntity<APIResponse> resend(@Email @RequestParam String email) {
         authServiceImplementation.resend(email);
         return response(APIResponse.builder()

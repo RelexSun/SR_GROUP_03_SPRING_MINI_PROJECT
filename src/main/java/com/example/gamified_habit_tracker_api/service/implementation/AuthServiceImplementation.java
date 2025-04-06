@@ -35,7 +35,7 @@ public class AuthServiceImplementation implements AuthService {
     private final AppUserMapper appUserMapper;
     private final EmailSenderServiceImplementation emailSenderServiceImplementation;
     private final AppUserImplementation appUserImplementation;
-    private final RedisTemplate redisTemplate;
+    private final RedisTemplate<String, String> redisTemplate;
 
     private void authenticate(String identifier, String password) {
         try {
@@ -80,11 +80,15 @@ public class AuthServiceImplementation implements AuthService {
     @SneakyThrows
     @Override
     public AppUserResponse register(AppUserRequest appUserRequest) {
+        String username = appUserRequest.getUsername().toLowerCase();
+        String email = appUserRequest.getEmail().toLowerCase();
+        if(appUserRepository.getUserByUsername(username) != null) throw new BadRequestException(username + " already exists.");
+        if(appUserRepository.getUserByEmail(email) != null) throw new BadRequestException(email + " already exists.");
         appUserRequest.setPassword(passwordEncoder.encode(appUserRequest.getPassword()));
         AppUser user = appUserRepository.register(appUserRequest);
         Random rnd = new Random();
         String otp  = Integer.toString(rnd.nextInt(999999));
-        String existingOTP = (String) redisTemplate.opsForValue().get(otp);
+        String existingOTP = redisTemplate.opsForValue().get(otp);
         if (existingOTP != null) {
             throw new BadRequestException("OTP already in use");
         }
@@ -99,11 +103,11 @@ public class AuthServiceImplementation implements AuthService {
         if (appUser == null) throw new NotFoundException("User doesn't exist");
         if(appUser.getIsVerified()) throw new BadRequestException("User already verified");
 
-        String storedOTP = (String) redisTemplate.opsForValue().get(optCode);
+        String storedOTP = redisTemplate.opsForValue().get(email);
         if(storedOTP == null) throw new BadRequestException("OTP already expired");
         if (!storedOTP.equals(optCode)) throw new BadRequestException("OTP code doesn't match");
 
-        redisTemplate.delete(optCode);
+        redisTemplate.delete(email);
         appUserRepository.updateVerificationStatus(email);
     }
 
