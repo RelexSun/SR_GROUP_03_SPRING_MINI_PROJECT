@@ -8,6 +8,7 @@ import com.example.gamified_habit_tracker_api.model.request.AppUserRequestUpdate
 import com.example.gamified_habit_tracker_api.service.UserProfileService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -35,7 +36,7 @@ public class UserProfileController extends BaseController {
     }
     @PutMapping
     @Operation(summary = "Update user profile")
-    public ResponseEntity<APIResponse> updateUserProfileById(@RequestBody AppUserRequestUpdate appUserRequestUpdate){
+    public ResponseEntity<APIResponse> updateUserProfileById(@Valid @RequestBody AppUserRequestUpdate appUserRequestUpdate){
         AppUser appUser;
         appUser = userProfileService.updateUserProfileById(appUserRequestUpdate);
         return response(APIResponse.builder()

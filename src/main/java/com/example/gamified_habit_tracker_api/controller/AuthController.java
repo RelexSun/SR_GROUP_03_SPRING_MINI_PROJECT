@@ -7,6 +7,8 @@ import com.example.gamified_habit_tracker_api.model.request.AppUserRequest;
 import com.example.gamified_habit_tracker_api.model.request.AuthRequest;
 import com.example.gamified_habit_tracker_api.model.response.AuthResponse;
 import com.example.gamified_habit_tracker_api.service.AppUserService;
+import io.swagger.v3.oas.annotations.Operation;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -39,7 +41,8 @@ public class AuthController extends BaseController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> authenticate(@RequestBody AuthRequest request) throws Exception {
+    @Operation(summary = "User login")
+    public ResponseEntity<?> authenticate(@Valid @RequestBody AuthRequest request) throws Exception {
         authenticate(request.getIdentifier(), request.getPassword());
         final UserDetails userDetails = appUserService.loadUserByUsername(request.getIdentifier());
         final String token = jwtService.generateToken(userDetails);
@@ -48,7 +51,8 @@ public class AuthController extends BaseController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<APIResponse> register(@RequestBody AppUserRequest request){
+    @Operation(summary = "Register a new user")
+    public ResponseEntity<APIResponse> register(@Valid @RequestBody AppUserRequest request){
         return response(APIResponse.builder()
                 .success(true)
                 .message("Register successfully")

@@ -17,13 +17,13 @@ public interface UserProfileRepository {
             @Result(property = "createdAt", column = "created_at"),
     })
     @Select("""
-    SELECT * FROM mydb.public.app_users WHERE app_user_id  = #{appUserId}::uuid;
+    SELECT * FROM app_users WHERE app_user_id  = #{appUserId}::uuid;
     """)
     AppUser getUserProfileById(String appUserId);
 
 
     @Select("""
-    UPDATE mydb.public.app_users
+    UPDATE app_users
     SET username = #{req.username}, profile_image_url = #{req.profileImageUrl}
     WHERE app_user_id = #{UserId}::uuid
     RETURNING *;
@@ -32,7 +32,7 @@ public interface UserProfileRepository {
 
 
     @Select("""
-        Delete FROM mydb.public.app_users where app_user_id  = #{userId}::uuid;
+        Delete FROM app_users where app_user_id  = #{userId}::uuid;
     """)
     AppUser deleteUserProfileById(String userId);
 }
