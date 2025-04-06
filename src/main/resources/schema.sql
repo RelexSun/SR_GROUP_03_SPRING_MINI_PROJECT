@@ -27,3 +27,27 @@ CREATE TABLE app_user_achievement(
                                      CONSTRAINT fk_app_user FOREIGN KEY (app_user_id) REFERENCES app_users (app_user_id) ON DELETE CASCADE ON UPDATE CASCADE,
                                      CONSTRAINT fk_achievements FOREIGN KEY (achievement_id) REFERENCES achievements (achievement_id) ON DELETE CASCADE ON UPDATE CASCADE
 );
+
+CREATE TABLE IF NOT EXISTS habits (
+    habit_id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
+    title VARCHAR(255) NOT NULL,
+    description VARCHAR,
+    frequency VARCHAR(255) NOT NULL,
+    is_active BOOLEAN NOT NULL DEFAULT TRUE,
+    app_user_id uuid NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT fk_app_users FOREIGN KEY (app_user_id) REFERENCES app_users (app_user_id)
+                    ON DELETE CASCADE
+                    ON UPDATE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS habit_logs (
+    habit_log_id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
+    log_date DATE DEFAULT CURRENT_DATE,
+    status VARCHAR(255) NOT NULL,
+    xp_earned INT NOT NULL,
+    habit_id uuid NOT NULL,
+    CONSTRAINT fk_habits FOREIGN KEY (habit_id) REFERENCES habits(habit_id)
+                    ON DELETE CASCADE
+                    ON UPDATE CASCADE
+);
