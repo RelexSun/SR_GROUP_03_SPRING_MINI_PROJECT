@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   redis:
     image: redis:6.0.7
@@ -10,7 +8,9 @@ services:
     ports:
       - "6379:6379"
     networks:
-      - go_networks
+        go_networks:
+          aliases:
+            - redis-local
 
   redis_insight:
     image: redislabs/redisinsight:1.14.0

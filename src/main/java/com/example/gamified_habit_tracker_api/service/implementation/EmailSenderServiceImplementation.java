@@ -22,7 +22,7 @@ public class EmailSenderServiceImplementation implements EmailSenderService {
     private String fromEmail;
 
     @SneakyThrows
-    public void sendEmail(String toEmail, int optCode) {
+    public void sendEmail(String toEmail, String optCode) {
         Context context = new Context();
         context.setVariable("optCode", optCode);
         String process = templateEngine.process("index", context);

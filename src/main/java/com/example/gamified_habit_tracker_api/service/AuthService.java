@@ -11,7 +11,7 @@ public interface AuthService {
 
     AppUserResponse register(AppUserRequest appUserRequest) throws MessagingException;
 
-    void verify(String optCode);
+    void verify(String email, String optCode);
 
     void resend(String email) throws MessagingException;
 }
