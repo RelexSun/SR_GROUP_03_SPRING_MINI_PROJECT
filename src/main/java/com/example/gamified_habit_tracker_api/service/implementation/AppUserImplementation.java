@@ -1,5 +1,6 @@
 package com.example.gamified_habit_tracker_api.service.implementation;
 
+import com.example.gamified_habit_tracker_api.exception.BadRequestException;
 import com.example.gamified_habit_tracker_api.exception.NotFoundException;
 import com.example.gamified_habit_tracker_api.model.entities.AppUser;
 import com.example.gamified_habit_tracker_api.model.mapper.AppUserMapper;
@@ -35,10 +36,16 @@ public class AppUserImplementation implements AppUserService {
 
     @Override
     public AppUserResponse register(AppUserRequest request) {
+        String username = request.getUsername().toLowerCase();
+        String email = request.getEmail().toLowerCase();
+        if(appUserRepository.getUserByUsername(username) != null) throw new BadRequestException(username + " already exists.");
+        if(appUserRepository.getUserByEmail(email) != null) throw new BadRequestException(email + " already exists.");
+
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(12);
         request.setPassword(encoder.encode(request.getPassword()));
+        request.setUsername(username);
+        request.setEmail(email);
         AppUser user = appUserRepository.register(request);
-
         return appUserMapper.toResponse(user);
     }
 }

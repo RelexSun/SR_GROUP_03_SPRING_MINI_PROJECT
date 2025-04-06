@@ -2,7 +2,6 @@ package com.example.gamified_habit_tracker_api.exception;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.converter.HttpMessageNotReadableException;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -16,8 +15,8 @@ import java.util.Map;
 @RestControllerAdvice
 public class GlobalHandleException {
     @ExceptionHandler(BadRequestException.class)
-    public ProblemDetail handleBadException() {
-        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, "Bad request");
+    public ProblemDetail handleBadException(BadRequestException e) {
+        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, e.getMessage());
         problemDetail.setProperty("timestamp", LocalDateTime.now());
         return problemDetail;
     }
@@ -73,6 +72,13 @@ public class GlobalHandleException {
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ProblemDetail handleHttpMessageNotReadableException(HttpMessageNotReadableException e) {
         ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, e.getMessage());
+        problemDetail.setProperty("timestamp", LocalDateTime.now());
+        return problemDetail;
+    }
+
+    @ExceptionHandler(UnauthorizedException.class)
+    public ProblemDetail handleAuthenticationException(UnauthorizedException e) {
+        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.UNAUTHORIZED, e.getMessage());
         problemDetail.setProperty("timestamp", LocalDateTime.now());
         return problemDetail;
     }

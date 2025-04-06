@@ -22,6 +22,7 @@ public interface UserProfileRepository {
     AppUser getUserProfileById(String appUserId);
 
 
+    @ResultMap("appUserMapper")
     @Select("""
     UPDATE app_users
     SET username = #{req.username}, profile_image_url = #{req.profileImageUrl}

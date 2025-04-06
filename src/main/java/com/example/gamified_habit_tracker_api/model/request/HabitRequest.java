@@ -12,6 +12,6 @@ public record HabitRequest(
         String description,
 
         @NotNull
-        HabitFrequency habitFrequency
+        HabitFrequency frequency
 ) {
 }

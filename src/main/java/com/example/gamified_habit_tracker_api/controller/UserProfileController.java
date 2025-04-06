@@ -2,9 +2,8 @@ package com.example.gamified_habit_tracker_api.controller;
 
 import com.example.gamified_habit_tracker_api.base.APIResponse;
 import com.example.gamified_habit_tracker_api.base.BaseController;
-import com.example.gamified_habit_tracker_api.model.entities.AppUser;
-import com.example.gamified_habit_tracker_api.model.request.AppUserRequest;
 import com.example.gamified_habit_tracker_api.model.request.AppUserRequestUpdate;
+import com.example.gamified_habit_tracker_api.model.response.AppUserResponse;
 import com.example.gamified_habit_tracker_api.service.UserProfileService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -25,7 +24,7 @@ public class UserProfileController extends BaseController {
     @GetMapping
     @Operation(summary = "Get user profile")
     public ResponseEntity<APIResponse> getUserProfileById(){
-        AppUser appUser;
+        AppUserResponse appUser;
         appUser = userProfileService.getUserProfileById();
         return response(APIResponse.builder()
                 .success(true)
@@ -37,7 +36,7 @@ public class UserProfileController extends BaseController {
     @PutMapping
     @Operation(summary = "Update user profile")
     public ResponseEntity<APIResponse> updateUserProfileById(@Valid @RequestBody AppUserRequestUpdate appUserRequestUpdate){
-        AppUser appUser;
+        AppUserResponse appUser;
         appUser = userProfileService.updateUserProfileById(appUserRequestUpdate);
         return response(APIResponse.builder()
                 .success(true)
@@ -49,7 +48,7 @@ public class UserProfileController extends BaseController {
     @DeleteMapping
     @Operation(summary = "Delete user profile")
     public ResponseEntity<APIResponse> deleteUserProfileById(){
-        AppUser appUser = userProfileService.deleteUserProfileById();
+        AppUserResponse appUser = userProfileService.deleteUserProfileById();
         return response(APIResponse.builder()
                 .success(true)
                 .message("App User deleted successfully!")

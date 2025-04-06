@@ -1,5 +1,6 @@
 package com.example.gamified_habit_tracker_api.model.request;
 
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
@@ -14,6 +15,7 @@ public class AppUserRequest {
     private String username;
 
     @NotBlank
+    @Email
     private String email;
 
     @NotBlank

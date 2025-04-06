@@ -42,12 +42,18 @@ public class AuthController extends BaseController {
 
     @PostMapping("/login")
     @Operation(summary = "User login")
-    public ResponseEntity<?> authenticate(@Valid @RequestBody AuthRequest request) throws Exception {
+    public ResponseEntity<APIResponse> authenticate(@Valid @RequestBody AuthRequest request) throws Exception {
+        String identifier = request.getIdentifier().toLowerCase();
+        request.setIdentifier(identifier);
         authenticate(request.getIdentifier(), request.getPassword());
         final UserDetails userDetails = appUserService.loadUserByUsername(request.getIdentifier());
         final String token = jwtService.generateToken(userDetails);
         AuthResponse authResponse = new AuthResponse(token);
-        return ResponseEntity.ok(authResponse);
+        return response(APIResponse.builder()
+                .success(true)
+                .message("Login successful! Authentication token generated.")
+                .status(HttpStatus.OK)
+                .payload(authResponse).build());
     }
 
     @PostMapping("/register")
