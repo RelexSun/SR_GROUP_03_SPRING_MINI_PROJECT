@@ -1,6 +1,6 @@
 package com.example.gamified_habit_tracker_api.model.entities;
 
-import com.example.gamified_habit_tracker_api.model.enums.Frequency;
+import com.example.gamified_habit_tracker_api.model.enums.HabitFrequency;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,7 +15,7 @@ public class Habit {
     private UUID habitId;
     private String title;
     private String description;
-    private Frequency frequency;
+    private HabitFrequency frequency;
     private Boolean isActive;
     private AppUser appUser;
     private LocalDateTime createdAt;

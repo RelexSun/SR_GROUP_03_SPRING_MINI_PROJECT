@@ -50,8 +50,17 @@ public interface AppUserRepository {
 
     @ResultMap("appUserMapper")
     @Select("""
-        SELECT * FROM app_users WHERE app_user_id = #{appUserId};
-        RETURNING *;
+        SELECT * FROM app_users WHERE app_user_id = #{id}::uuid;
     """)
-    AppUser getUserById(UUID id);
+    AppUser getUserById(String id);
+
+    @Select("""
+        UPDATE app_users SET xp = xp + #{xp} WHERE app_user_id = #{appUserId}::uuid RETURNING xp;
+    """)
+    Integer updateUserXpById(String appUserId, Integer xp);
+
+    @Update("""
+        UPDATE app_users SET level = (level + 1) WHERE app_user_id = #{appUserId}::uuid;
+    """)
+    void updateUserLevelById(String appUserId);
 }
