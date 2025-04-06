@@ -1,6 +1,5 @@
 package com.example.gamified_habit_tracker_api.service.implementation;
 
-import com.example.gamified_habit_tracker_api.exception.BadRequestException;
 import com.example.gamified_habit_tracker_api.exception.NotFoundException;
 import com.example.gamified_habit_tracker_api.model.entities.AppUser;
 import com.example.gamified_habit_tracker_api.model.mapper.AppUserMapper;
@@ -11,8 +10,11 @@ import com.example.gamified_habit_tracker_api.service.AppUserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.Random;
 
 @Slf4j
 @Service
@@ -20,33 +22,14 @@ import org.springframework.stereotype.Service;
 public class AppUserImplementation implements AppUserService {
     private final AppUserRepository appUserRepository;
     private final AppUserMapper appUserMapper;
-    private BCryptPasswordEncoder bCryptPasswordEncoder;
-    @Override
-    public UserDetails loadUserByUsername(String identifier) {
-        AppUser appUser;
-        if(identifier.contains("@")){
-            appUser = appUserRepository.getUserByEmail(identifier);
-            if (appUser == null) throw new NotFoundException("Invalid email or password. Please check your credentials and try again.");
-        }else {
-            appUser = appUserRepository.getUserByUsername(identifier);
-            if (appUser == null) throw new NotFoundException("Invalid username or password. Please check your credentials and try again.");
-        }
-        return appUser;
-    }
+    private final PasswordEncoder passwordEncoder;
+    private final EmailSenderServiceImplementation emailSenderServiceImplementation;
 
     @Override
-    public AppUserResponse register(AppUserRequest request) {
-        String username = request.getUsername().toLowerCase();
-        String email = request.getEmail().toLowerCase();
-        if(appUserRepository.getUserByUsername(username) != null) throw new BadRequestException(username + " already exists.");
-        if(appUserRepository.getUserByEmail(email) != null) throw new BadRequestException(email + " already exists.");
-
-        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(12);
-        request.setPassword(encoder.encode(request.getPassword()));
-        request.setUsername(username);
-        request.setEmail(email);
-        AppUser user = appUserRepository.register(request);
-        return appUserMapper.toResponse(user);
+    public UserDetails loadUserByUsername(String identifier) throws UsernameNotFoundException {
+        if (identifier.contains("@")) return appUserRepository.getUserByEmail(identifier);
+        return appUserRepository.getUserByUsername(identifier);
     }
+
 }
 

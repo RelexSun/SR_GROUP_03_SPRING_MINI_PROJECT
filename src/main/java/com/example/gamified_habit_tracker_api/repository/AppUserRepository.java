@@ -6,7 +6,6 @@ import com.example.gamified_habit_tracker_api.model.request.AppUserRequest;
 import org.apache.ibatis.annotations.*;
 import org.apache.ibatis.type.JdbcType;
 
-import java.util.List;
 import java.util.UUID;
 
 @Mapper
@@ -22,22 +21,11 @@ public interface AppUserRepository {
     """)
     AppUser getUserByEmail(String email);
 
-
+    @ResultMap("appUserMapper")
     @Select("""
         SELECT * FROM app_users WHERE username = #{username};
     """)
     AppUser getUserByUsername(String username);
-
-//    @Select("""
-//        SELECT name FROM app_roles ar INNER JOIN user_role ur ON
-//        ar.role_id = ur.role_id WHERE user_id = #{userId};
-//    """)
-//    List<String> getAllRolesByUserId(Long userId);
-
-//    @Select("""
-//       INSERT INTO app_roles VALUES (#{userId}, #{role});
-//    """)
-//    void createRolesByUserId(Long userId, String role);
 
     @ResultMap("appUserMapper")
     @Select("""
@@ -63,4 +51,10 @@ public interface AppUserRepository {
         UPDATE app_users SET level = (level + 1) WHERE app_user_id = #{appUserId}::uuid;
     """)
     void updateUserLevelById(String appUserId);
+
+    @ResultMap("appUserMapper")
+    @Update("""
+         UPDATE app_users SET is_verified = true WHERE email = email;
+    """)
+    void updateVerificationStatus(String email);
 }
