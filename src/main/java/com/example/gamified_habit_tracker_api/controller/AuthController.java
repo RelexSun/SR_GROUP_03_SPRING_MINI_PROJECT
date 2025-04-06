@@ -9,7 +9,10 @@ import com.example.gamified_habit_tracker_api.model.response.AuthResponse;
 import com.example.gamified_habit_tracker_api.service.AppUserService;
 import com.example.gamified_habit_tracker_api.service.implementation.AuthServiceImplementation;
 import jakarta.mail.MessagingException;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Positive;
+import io.swagger.v3.oas.annotations.Operation;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -37,7 +40,7 @@ public class AuthController extends BaseController {
 //    }
 
     @PostMapping("/login")
-    public ResponseEntity<APIResponse> login(@RequestBody AuthRequest request) throws Exception {
+    public ResponseEntity<APIResponse> login(@Valid @RequestBody AuthRequest request) throws Exception {
         return response(APIResponse.builder()
                 .success(true)
                 .status(HttpStatus.OK)
@@ -47,7 +50,8 @@ public class AuthController extends BaseController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<APIResponse> register(@RequestBody AppUserRequest request){
+    @Operation(summary = "Register a new user")
+    public ResponseEntity<APIResponse> register(@Valid @RequestBody AppUserRequest request){
         return response(APIResponse.builder()
                 .success(true)
                 .message("Register successfully")
@@ -58,7 +62,7 @@ public class AuthController extends BaseController {
 
 
     @PostMapping("/verify")
-    public ResponseEntity<APIResponse> verify(@RequestParam String email, @RequestParam @Positive(message = "Otp code cannot be negative or zero") String otpCode) {
+    public ResponseEntity<APIResponse> verify(@Email @RequestParam String email, @RequestParam @Positive(message = "Otp code cannot be negative or zero") String otpCode) {
         authServiceImplementation.verify(email, otpCode);
         return response(APIResponse.builder()
                 .success(true)
@@ -69,7 +73,7 @@ public class AuthController extends BaseController {
 
 
     @PostMapping("/resend")
-    public ResponseEntity<APIResponse> resend(@RequestParam String email) {
+    public ResponseEntity<APIResponse> resend(@Email @RequestParam String email) {
         authServiceImplementation.resend(email);
         return response(APIResponse.builder()
                 .success(true)

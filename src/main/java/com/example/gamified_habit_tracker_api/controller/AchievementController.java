@@ -4,7 +4,9 @@ import com.example.gamified_habit_tracker_api.base.APIResponse;
 import com.example.gamified_habit_tracker_api.base.BaseController;
 import com.example.gamified_habit_tracker_api.model.entities.Achievement;
 import com.example.gamified_habit_tracker_api.service.AchievementService;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,9 +25,10 @@ public class AchievementController extends BaseController {
     private final AchievementService achievementService;
 
     @GetMapping
+    @Operation(summary = "Get all achievements")
     public ResponseEntity<APIResponse> getAllAchievement(
-            @RequestParam(defaultValue = "1") Integer page ,
-            @RequestParam(defaultValue = "10") Integer size) {
+            @RequestParam(defaultValue = "1") @Positive Integer page ,
+            @RequestParam(defaultValue = "10") @Positive Integer size) {
         List<Achievement> achievements;
         achievements = achievementService.getAllAchievement(page,size);
         return response(APIResponse.builder()
@@ -37,8 +40,10 @@ public class AchievementController extends BaseController {
     }
 
     @GetMapping("/app-users")
-    public ResponseEntity<APIResponse> getAchievementByUserId( @RequestParam(defaultValue = "1") Integer page ,
-                                                               @RequestParam(defaultValue = "10") Integer size){
+    @Operation(summary = "Get achievement by App User ID")
+    public ResponseEntity<APIResponse> getAchievementByUserId(
+            @RequestParam(defaultValue = "1") @Positive Integer page,
+            @RequestParam(defaultValue = "10") @Positive Integer size){
         List<Achievement> achievements;
         achievements = achievementService.getAchievementByUserId(page,size);
         return response(APIResponse.builder()

@@ -5,6 +5,7 @@ import com.example.gamified_habit_tracker_api.base.APIResponse;
 import com.example.gamified_habit_tracker_api.base.BaseController;
 import com.example.gamified_habit_tracker_api.model.entities.FileMetadata;
 import com.example.gamified_habit_tracker_api.service.FileService;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -24,10 +25,8 @@ import java.io.InputStream;
 public class FileController extends BaseController {
     private final FileService fileService;
 
-
-
-
     @PostMapping(value = "/upload-file", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @Operation(summary = "Upload a file")
     public ResponseEntity<APIResponse> uploadFile(@RequestParam MultipartFile file){
         return response(APIResponse.builder()
                 .success(true)
@@ -38,6 +37,7 @@ public class FileController extends BaseController {
     }
 
     @GetMapping("/preview-file/{file-name}")
+    @Operation(summary = "Preview a file")
     public ResponseEntity<?> getFileByFileName(@PathVariable("file-name") String fileName) throws IOException {
         InputStream inputStream = fileService.getFileByFileName(fileName);
         return ResponseEntity.status(HttpStatus.OK)
