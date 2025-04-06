@@ -41,6 +41,7 @@ public class AuthController extends BaseController {
     public ResponseEntity<APIResponse> login(@RequestBody AuthRequest request) throws Exception {
         return response(APIResponse.builder()
                 .success(true)
+                .status(HttpStatus.OK)
                 .message("Login successfully")
                 .payload( authServiceImplementation.login(request))
                 .build());

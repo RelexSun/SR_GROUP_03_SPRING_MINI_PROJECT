@@ -22,7 +22,7 @@ public interface AppUserRepository {
     """)
     AppUser getUserByEmail(String email);
 
-
+    @ResultMap("appUserMapper")
     @Select("""
         SELECT * FROM app_users WHERE username = #{username};
     """)

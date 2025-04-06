@@ -14,8 +14,8 @@ import java.util.Map;
 @RestControllerAdvice
 public class GlobalHandleException {
     @ExceptionHandler(BadRequestException.class)
-    public ProblemDetail handleBadException() {
-        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, "Bad request");
+    public ProblemDetail handleBadException(BadRequestException e) {
+        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, e.getMessage());
         problemDetail.setProperty("timestamp", LocalDateTime.now());
         return problemDetail;
     }
